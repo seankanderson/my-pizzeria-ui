@@ -36,7 +36,7 @@
         <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
           <Nav class="ms-auto" navbar>
             <NavItem>
-              <NavLink href="{$url('login')}">Login or Register</NavLink>
+              <NavLink href="{$url('login-or-register')}">Login or Register</NavLink>
             </NavItem>            
           </Nav>
         </Collapse>
