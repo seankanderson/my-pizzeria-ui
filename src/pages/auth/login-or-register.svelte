@@ -10,81 +10,61 @@
         Form,
         FormGroup,
         Alert,
-        Spinner
+        Spinner,
     } from "sveltestrap";
 
-    import { register, login } from '../../services/auth-service'
+    import { register, login } from "../../services/auth-service";
+    import { goto } from "@roxi/routify";
+    import _ from "lodash";
+    import { getResponseMessages } from "../../services/api-service";
+    import { jwt } from "../../helpers/stores"
 
-    import {goto} from '@roxi/routify'
-
-   import _ from 'lodash';
-   
     let loading = false;
 
-    let email;
-    let password;
-        
-    let errorMessage = '';
-    let showErrorMessage = false;
+    let email = 'admin@email.com';
+    let password = 'shift2enter';
 
-    let responseMessage = '';
-    let showResponseMessage = false;
+    let errorMessage = "";
+    let responseMessage = "";
+    
 
     async function loginUser() {
         resetAnyResultMessages();
 
         loading = true;
-        const result = await login(email, password);
+        const response = await login(email, password);
         loading = false;
-
-        //console.log('result...', result);
-
-        showAnyResultMessages(result);
-
-    };
-
-    async function registerUser(event)  {
         
+        //jwt.update(token => response.data.jwtToken);
+        $jwt = response.data.jwtToken
+
+        console.log('Stored Login token...', $jwt);
+        ({responseMessage, errorMessage} = getResponseMessages(response))
+    }
+
+    async function registerUser(event) {
         resetAnyResultMessages();
-               
+
         loading = true;
-        const result = await register(email, password);
+        const response = await register(email, password);
         loading = false;
 
-        //console.log('result...', result);
-
-        showAnyResultMessages(result);
-    };
-   
-    function resetAnyResultMessages() {
-        errorMessage = null;
-        showErrorMessage = false;
-        showResponseMessage = false;
+        ({responseMessage, errorMessage} = getResponseMessages(response));
     }
-  
-  function showAnyResultMessages(result) {
-    if (result.response) {
-            responseMessage = _.get(result.response, 'message');
-            if (!responseMessage) {
-                responseMessage = result.response;
-            }
-            showResponseMessage = true;
-        }
 
-        if (result.error) {
-            errorMessage = result.error;
-            showErrorMessage = true;
-        }
-  }
+    function resetAnyResultMessages() {
+        responseMessage = null;
+        errorMessage = null;
+    }
+
 </script>
 
 <main>
     <Container fluid>
         <Row>
-            <Col></Col>
+            <Col />
             <Col>
-            
-                <Container>       
+                <Container>
                     <Form>
                         <FormGroup>
                             <Row>
@@ -97,72 +77,90 @@
                             </Row>
                             <Row>
                                 <Col>
-                                    <Input bind:value={email}
+                                    <Input
+                                        bind:value={email}
                                         type="email"
                                         name="email"
-                                        id="emailInput"                                        
+                                        id="emailInput"
+                                        
                                     />
                                 </Col>
                             </Row>
-    
+
                             <Row>
                                 <Col>
-                                    <Label class="mt-2" for="passwordInput">Password</Label>
+                                    <Label class="mt-2" for="passwordInput"
+                                        >Password</Label
+                                    >
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <Input bind:value={password}
+                                    <Input
+                                        bind:value={password}
                                         type="password"
                                         name="password"
-                                        id="passwordInput"                                        
+                                        id="passwordInput"
                                     />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    {#if showErrorMessage }
-                                        <Alert color=danger  class="mt-2"> 
+                                    {#if errorMessage}
+                                        <Alert color="danger" class="mt-2">
                                             <p>{errorMessage}</p>
                                         </Alert>
                                     {/if}
-    
-                                    {#if showResponseMessage }
-                                        <Alert color=success  class="mt-2">
+
+                                    {#if responseMessage}
+                                        <Alert color="success" class="mt-2">
                                             <p>{responseMessage}</p>
                                         </Alert>
                                     {/if}
 
-                                    {#if loading} 
+                                    {#if loading}
                                         <div class="text-center m-2">
-                                            <Spinner size="lg" type="border" color=primary />
+                                            <Spinner
+                                                size="lg"
+                                                type="border"
+                                                color="primary"
+                                            />
                                         </div>
                                     {/if}
-                                    
                                 </Col>
                             </Row>
-                            
                         </FormGroup>
                     </Form>
-             
-            <Row>
-                <Col>
-                    <Button disabled={loading} color="primary" class="mt-2 ms-2 float-end" on:click={loginUser}>Login</Button>
-                    <Button disabled={loading} class="mt-2 float-end" on:click={registerUser} >Register</Button>
-                   
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Button disabled={loading} color=success class="mt-2 float-end" on:click={$goto('menu')} >Order as a guest</Button>
-                </Col>
-            </Row>
-        </Container>
 
-
+                    <Row>
+                        <Col>
+                            <Button
+                                disabled={loading}
+                                color="primary"
+                                class="mt-2 ms-2 float-end"
+                                on:click={loginUser}>Login</Button
+                            >
+                            <Button
+                                disabled={loading}
+                                class="mt-2 float-end"
+                                on:click={registerUser}>Register</Button
+                            >
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button
+                                disabled={loading}
+                                color="success"
+                                class="mt-2 float-end"
+                                on:click={$goto("menu")}
+                                >Order as a guest</Button
+                            >
+                        </Col>
+                    </Row>
+                </Container>
             </Col>
-            <Col></Col>
+            <Col />
         </Row>
     </Container>
-   
 </main>

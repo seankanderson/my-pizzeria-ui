@@ -1,68 +1,49 @@
 <!-- routify:options name="verify-email" -->
 <script>
-    import _ from 'lodash';
-    import { Spinner, Alert } from "sveltestrap";
-    import { params, afterPageLoad } from "@roxi/routify";
+    import _ from "lodash";
+    import { Spinner, Alert, Container } from "sveltestrap";
+    import { afterPageLoad } from "@roxi/routify";
     import { verifyEmail } from "../../../services/auth-service";
+    import { getResponseMessages } from "../../services/api-service";
 
-    export let token;
+    export let token; // URL path variable--matches filename
     let loading = false;
 
     let errorMessage = "";
-    let showErrorMessage = false;
-
     let responseMessage = "";
-    let showResponseMessage = false;
-
+    
     $afterPageLoad(async (page) => {
         resetAnyResultMessages();
-
         loading = true;
-        const result = await verifyEmail(token);
+        const response = await verifyEmail(token);
         loading = false;
-
-        showAnyResultMessages(result);
+        ({responseMessage, errorMessage} = getResponseMessages(response));
     });
 
     function resetAnyResultMessages() {
         errorMessage = null;
-        showErrorMessage = false;
-        showResponseMessage = false;
+        responseMessage = null;
     }
 
-    function showAnyResultMessages(result) {
-        if (result.response) {
-            responseMessage = _.get(result.response, "message");
-            if (!responseMessage) {
-                responseMessage = result.response;
-            }
-            showResponseMessage = true;
-        }
-
-        if (result.error) {
-            errorMessage = result.error;
-            showErrorMessage = true;
-        }
-    }
 </script>
 
-<h3>Verifying email....</h3>
+<Container fluid>
+    {#if loading}
+        <div class="text-center m-2">
+            <h2>Verifying email....</h2>
+            <Spinner size="lg" type="grow" color="primary" />
+        </div>
+    {/if}
 
-{#if loading}
-    <div class="text-center m-2">
-        <Spinner size="lg" type="border" color="primary" />
-    </div>
-{/if}
+    {#if errorMessage}
+        <Alert color="danger" class="mt-2">
+            <p>{errorMessage}</p>
+        </Alert>
+    {/if}
 
-{#if showErrorMessage}
-    <Alert color="danger" class="mt-2">
-        <p>{errorMessage}</p>
-    </Alert>
-{/if}
-
-{#if showResponseMessage}
-    <Alert color="success" class="mt-2">
-        <p>{responseMessage}</p>
-    </Alert>
-{/if}
-
+    {#if responseMessage}
+        <Alert color="success" class="mt-2">
+            <p>{responseMessage}</p>
+        </Alert>
+    {/if}
+</Container>
