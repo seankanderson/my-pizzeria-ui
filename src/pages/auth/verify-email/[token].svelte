@@ -4,7 +4,7 @@
     import { Spinner, Alert, Container } from "sveltestrap";
     import { afterPageLoad } from "@roxi/routify";
     import { verifyEmail } from "../../../services/auth-service";
-    import { getResponseMessages } from "../../services/api-service";
+    import { getResponseMessages } from "../../../services/api-service";
 
     export let token; // URL path variable--matches filename
     let loading = false;

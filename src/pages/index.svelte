@@ -3,14 +3,10 @@
     import Route from '@roxi/routify/runtime/Route.svelte';
     import {
         Button,
-        Label,
-        Input,
         Col,
         Row,
         Container,
-        Form,
-        FormGroup,
-        Alert,
+        Alert
     } from "sveltestrap";
     metatags.title = 'My Pizzeria';
     metatags.description = 'Online ordering and menu management';
