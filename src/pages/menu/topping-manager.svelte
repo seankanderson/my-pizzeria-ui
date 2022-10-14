@@ -1,4 +1,4 @@
-<!-- routify:options name="topping-manager" -->
+<!-- routify:options name="menu-toppings-manager" -->
 <script>
     import {
         Button,
@@ -41,7 +41,6 @@
 
 <Container fluid>
     <Row>
-        <Col />
         <Col class="d-flex justify-content-center">
             <Button
                 size="lg"
@@ -50,6 +49,8 @@
                 on:click={getToppings}>Load Toppings</Button
             >
         </Col>
+        <Col />
+        
         <Col />
     </Row>
 
@@ -73,6 +74,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
+                            <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -80,7 +82,8 @@
                         {#each toppings as topping}
                             <tr>
                                 <td>{topping.name}</td>
-                                <td>{topping.description}</td>
+                                <td>{topping.shortDescription}</td>
+                                <td>{topping.defaultPrice}</td>
                                 <td><Button size="sm" on:click={() => selectedTopping = topping }>Edit</Button></td>
                             </tr>
                         {/each}

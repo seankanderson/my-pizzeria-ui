@@ -1,4 +1,4 @@
-<!-- routify:options name="login-or-register" -->
+<!-- routify:options name="manage-accounts" -->
 <script>
   import {
     Button,

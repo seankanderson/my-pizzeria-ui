@@ -17,7 +17,7 @@
   import { register, login } from "../../services/auth-service";
   import { goto } from "@roxi/routify";
   import { getResponseMessages } from "../../services/api-service";
-  import { jwt } from "../../helpers/stores";
+  import { jwt, account } from "../../helpers/stores";
 
   let loading = false;
 
@@ -36,7 +36,9 @@
     ({ responseMessage, errorMessage } = getResponseMessages(response));
     
     console.log("response...", response);
-    $jwt = _.get(response, ['data','jwtToken']);
+    $jwt = _.get(response, ['data', 'jwtToken']);
+    const acct = {email: _.get(response, ['data', 'email']), role: _.get(response, ['data', 'role'])};
+    $account = acct;
     
   }
 
@@ -54,6 +56,8 @@
     responseMessage = null;
     errorMessage = null;
   }
+
+  console.log('account...', JSON.parse($account));
 </script>
 
 <main>

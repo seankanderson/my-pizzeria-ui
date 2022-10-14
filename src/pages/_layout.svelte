@@ -8,11 +8,16 @@
     NavItem,
     NavLink,
     Spinner,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
   } from "sveltestrap";
   import { goto, url } from "@roxi/routify";
   import { logOut } from "../services/auth-service";
   import { jwt } from "../helpers/stores";
-
+  import { get } from 'svelte/store'
+  
   let isOpen = false;
   let loading = false;
 
@@ -20,12 +25,13 @@
     loading = true;
     await logOut();
     loading = false;
+    
   }
 
   function handleUpdate(event) {
     isOpen = event.detail.isOpen;
   }
-
+  console.log('jwt...', get(jwt))
   // DEBUG
   // $: console.log("Layout $jwt...", $jwt);
 </script>
@@ -50,6 +56,20 @@
             </NavLink>
           {/if}
         </NavItem>
+        
+        <Dropdown>
+          <DropdownToggle caret>Admin</DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Food Menu</DropdownItem>
+            <DropdownItem on:click={$goto("menu-category-manager")}>Menu Categories</DropdownItem>
+            <DropdownItem on:click={$goto("menu-toppings-manager")}>Menu Toppings</DropdownItem>
+            <DropdownItem on:click={$goto("menu-toppings-manager")}>Menu Entrees</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem header>Accounts</DropdownItem>
+            <DropdownItem on:click={$goto("manage-accounts")}>Users</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+
       </Nav>
     </Collapse>
   </Navbar>

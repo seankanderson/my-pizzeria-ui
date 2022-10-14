@@ -22,3 +22,36 @@ export async function getAllToppings() {
     return makeApiGet(resourcePath)
 }
 
+export function addCategoryTo(categorized, category) {
+    const categories = _.get(categorized, 'categories')
+
+    if (!categories) {
+
+        categorized.categories = []
+        categorized.categories.push(category)
+        return categorized
+
+    } else {
+
+        if (categories.length == 0) {
+            
+            categorized.categories.push(category)
+            return categorized
+
+        } else {
+            
+            const categoriesFound = categories.find(x => x === category)
+            
+            if (categoriesFound) {
+                return categorized
+            } else {
+                categorized.categories.push(category)
+                return categorized
+            }
+            
+        }
+
+    }
+
+}
+

@@ -1,4 +1,4 @@
-<!-- routify:options name="category-manager" -->
+<!-- routify:options name="menu-category-manager" -->
 <script>
     import {
         Button,
@@ -14,7 +14,7 @@
 
     let loading = false;
     let errorMessage = "";
-    let responseMessage = "";
+    let responseMessage = "";  
     let categories = [];
     let selectedCategory;
 
@@ -38,9 +38,7 @@
         categories = result.data;
     }
 
-    function fire(category) {
-
-    }
+   
 </script>
 
 <Container fluid>
@@ -92,7 +90,7 @@
                 </Table>
             </Col>
             <Col>
-                <CategoryForm category={selectedCategory}/>
+                <CategoryForm bind:category={selectedCategory}/>
             </Col>
         </Row>
     </Container>
